@@ -1,34 +1,25 @@
-# HexAsm
+# Hex Assembler
 
-Minimal hex viewer in pure x86-64 Linux assembly.
+Minimal hex viewer written in pure x86-64 Linux assembly.
 
-## Features
+---
 
-- Reads from a file path passed as `argv[1]`
-- Falls back to `stdin` when no file argument is provided
-- Uses only direct Linux syscalls: `openat`, `read`, `write`, `exit`
-- No libc, no C runtime, no dynamic allocation
-- Fixed 16-byte input buffer
+## Overview
 
-## Build
+This project was created as a **first practical step in learning Assembly language**.
+The goal was to understand how low-level programs interact directly with the operating system without relying on high-level abstractions.
 
-```sh
-make
-```
+Instead of using standard libraries or runtime environments, this program operates entirely through **Linux syscalls**, providing a clear view of how data flows from disk (or stdin) to the terminal.
 
-## Usage
+---
 
-Dump a file:
+## What the program does
 
-```sh
-./hexasm /bin/ls
-```
+Hex Assembler reads binary data and displays it in a structured format:
 
-Pipe data through stdin:
-
-```sh
-printf 'Hello ASM!\n' | ./hexasm
-```
+* File offset (position in file)
+* Hexadecimal representation of bytes
+* ASCII representation (human-readable characters)
 
 Example output:
 
@@ -36,8 +27,113 @@ Example output:
 00000000  48 65 6c 6c 6f 20 41 53  4d 21 0a                 Hello ASM!.
 ```
 
-## Notes
+This allows inspection of any file at the byte level, regardless of its type.
 
-- Offsets are printed as 8 lowercase hexadecimal digits.
-- Non-printable bytes are rendered as `.` in the ASCII column.
-- The program exits with status `1` on syscall failure.
+---
+
+## Learning goals
+
+This project focuses on core low-level concepts:
+
+* Direct interaction with the Linux kernel via syscalls
+* Working with file descriptors (`openat`, `read`)
+* Manual memory handling using a fixed buffer
+* Byte-level data processing
+* Converting raw bytes into human-readable formats (hex + ASCII)
+* Building a complete program without libc or runtime support
+
+---
+
+## Features
+
+* Reads input from:
+
+  * a file path (`argv[1]`)
+  * or `stdin` if no argument is provided
+* Uses only syscalls:
+
+  * `openat`
+  * `read`
+  * `write`
+  * `exit`
+* Fixed 16-byte buffer per read
+* Classic hex dump layout (offset + hex + ASCII)
+* Printable ASCII characters are shown directly
+* Non-printable bytes are replaced with `.`
+
+---
+
+## Build
+
+```sh
+make
+```
+
+---
+
+## Usage
+
+### Read from file
+
+```sh
+./hexasm /bin/ls
+```
+
+### Read from stdin
+
+```sh
+printf 'Hello ASM!\n' | ./hexasm
+```
+
+---
+
+## Technical notes
+
+* Architecture: x86-64 (Linux)
+* Entry point: `_start`
+* No libc, no dynamic memory allocation
+* Offset increments by the number of bytes actually read
+* Output is formatted manually without helper functions from standard libraries
+
+---
+
+## Limitations
+
+* No command-line flags (minimal design)
+* Fixed output width (16 bytes per line)
+* No paging or interactive navigation
+* No error messages (only exit codes)
+
+---
+
+## Future improvements
+
+Possible extensions for further learning:
+
+* Vertical mode (1 byte per line)
+* Colored output using ANSI escape sequences
+* Configurable bytes per line
+* File size detection and progress display
+* Interactive viewer (scrolling / paging)
+
+---
+
+## Motivation
+
+The purpose of this project is not to compete with existing tools like `hexdump` or `xxd`, but to understand:
+
+* how such tools work internally
+* how data is represented at the lowest level
+* how software can be built from scratch with minimal dependencies
+
+---
+
+## Conclusion
+
+Hex Assembler is a small but complete low-level utility that demonstrates:
+
+* control over execution flow
+* direct system interaction
+* manual data formatting
+
+It serves as a foundation for more complex Assembly projects.
