@@ -73,6 +73,26 @@ make
 
 ## Usage
 
+### Download the package
+
+Arch Linux
+```bash
+sudo pacman -S nasm
+```
+Ubuntu
+```bash
+sudo apt install -y nasm
+```
+
+Debian
+```bash
+sudo apt install nasm
+```
+### Launch
+
+```bash
+make
+```
 ### Read from file
 
 ```sh
